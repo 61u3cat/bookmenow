@@ -38,5 +38,19 @@ Route::prefix('book')->name('book.')->group(function () {
     Route::get('/{service}', [BookingController::class, 'show'])->name('show'); // service detail
     Route::post('/{service}', [BookingController::class, 'store'])->name('store'); // submit booking
 });
+Route::middleware(['auth','role:provider'])->prefix('provider')->name('provider.')->group(function(){
+    Route::get('/bookings',[App\Http\Controllers\Provider\BookingController::class,'index'])->name('bookings.index');
+});
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+
+        // Admin managing providers, services, and bookings
+        Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+        Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
+        Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
+    });
 
 require __DIR__.'/auth.php';
