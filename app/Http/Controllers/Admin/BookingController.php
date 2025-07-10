@@ -13,7 +13,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with('service')->latest()->paginate(10);
+        $bookings = Booking::with('service', 'user')->latest()->paginate(10);
         return view('admin.bookings.index', compact('bookings'));
     }
 
@@ -63,6 +63,6 @@ class BookingController extends Controller
     public function destroy(Booking $booking)
     {
         $booking->delete();
-        return back()->with('success', 'Booking deleted.');
+        return redirect()->route('admin.bookings.index')->with('success', 'Booking deleted.');
     }
 }

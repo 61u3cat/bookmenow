@@ -1,9 +1,8 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">All Bookings</h2>
-    </x-slot>
+@extends('layouts.app')
 
+@section('content')
     <div class="py-6 px-4">
+        <h2 class="text-xl font-semibold mb-6">All Bookings</h2>
         @if ($bookings->count())
             <table class="w-full border border-gray-300">
                 <thead>
@@ -28,7 +27,7 @@
                                 <form method="POST" action="{{ route('admin.bookings.destroy', $booking) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button onclick="return confirm('Delete this booking?')" class="text-red-500">Delete</button>
+                                    <button onclick="return confirm('Delete this booking?')" class="text-red-500 hover:text-[#F53003]">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -41,4 +40,4 @@
             <p>No bookings found.</p>
         @endif
     </div>
-</x-app-layout>
+@endsection

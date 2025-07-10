@@ -6,7 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    protected $fillable = ['user_id', 'title', 'description', 'price', 'duration_minutes'];
+    protected $fillable =
+    [
+        'user_id',
+        'title',
+        'description',
+        'price',
+        'duration_minutes'
+    ];
 
     // One service belongs to a user
     public function user()
@@ -18,7 +25,7 @@ class Service extends Model
         return $this->hasMany(Booking::class);
     }
     public function provider()
-{
-    return $this->belongsTo(User::class, 'user_id');
-}
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

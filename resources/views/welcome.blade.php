@@ -22,6 +22,7 @@
         <nav class="flex gap-4">
             @auth
                 <a href="{{ url('/dashboard') }}" class="text-[#F53003] font-medium hover:underline">Dashboard</a>
+                <span class="ml-2 text-[#706f6c]">Hello, {{ Auth::user()->name }}</span>
             @else
                 <a href="{{ route('login') }}" class="text-[#F53003] font-medium hover:underline">Login</a>
                 @if (Route::has('register'))
@@ -36,7 +37,19 @@
         <div class="max-w-xl">
             <h1 class="text-4xl lg:text-5xl font-bold mb-4">Easy Online Scheduling for Everyone</h1>
             <p class="mb-6 text-lg text-[#706f6c]">BookMeNow helps you manage appointments, services, and clients with ease. Save time, grow your business, and delight your customers.</p>
-            <a href="{{ route('book.index') }}" class="inline-block px-8 py-3 bg-[#F53003] text-white rounded shadow font-semibold text-lg hover:bg-[#d42a00] transition">Book a Service</a>
+            @guest
+                <a href="{{ route('login', ['redirect' => 'book.index']) }}"
+                   onclick="event.preventDefault(); 
+                            window.location='{{ route('login') }}?message=Please+login+first+to+use+the+service';"
+                   class="inline-block px-10 py-4 bg-[#F53003] text-white rounded-xl shadow-lg font-bold text-2xl tracking-wide transition-all duration-200 hover:bg-[oklch(0.865_0.127_207.078)] hover:text-[#d42a00] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                    Book a Service
+                </a>
+            @else
+                <a href="{{ route('book.index') }}"
+                   class="inline-block px-10 py-4 bg-[#F53003] text-white rounded-xl shadow-lg font-bold text-2xl tracking-wide transition-all duration-200 hover:bg-[oklch(0.865_0.127_207.078)] hover:text-[#d42a00] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-400">
+                    Book a Service
+                </a>
+            @endguest
             <div class="mt-4 flex gap-4 text-sm text-[#706f6c]">
                 <span>Free to use</span>
                 <span>•</span>

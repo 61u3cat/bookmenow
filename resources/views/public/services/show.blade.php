@@ -1,3 +1,9 @@
+@if(session('error'))
+    <div class="bg-red-100 text-red-800 p-3 rounded mb-4">
+        {{ session('error') }}
+    </div>
+@endif
+
 @extends('layouts.app')
 
 @section('content')

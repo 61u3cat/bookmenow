@@ -3,9 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,11 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'business_name',
+        'business_details',
+        'address',
+        'govt_no',
+        'contact',
     ];
 
     /**
@@ -47,3 +53,10 @@ class User extends Authenticatable
         ];
     }
 }
+
+// User::create([
+//     'name' => 'tuhin',
+//     'email' => 'admin@mail.com',
+//     'password' => bcrypt('12345678'),
+//     'role' => 'admin',
+// ]);

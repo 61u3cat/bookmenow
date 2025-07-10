@@ -33,7 +33,7 @@ Route::middleware(['auth', 'role:provider'])->prefix('provider')->name('provider
 //     Route::get('/provider/test', fn() => 'Testing Route');
 // });
 // Public Booking Routes (no auth required)
-Route::prefix('book')->name('book.')->group(function () {
+Route::middleware('auth')->prefix('book')->name('book.')->group(function () {
     Route::get('/', [BookingController::class, 'index'])->name('index'); // service list
     Route::get('/{service}', [BookingController::class, 'show'])->name('show'); // service detail
     Route::post('/{service}', [BookingController::class, 'store'])->name('store'); // submit booking
@@ -52,8 +52,17 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
         Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
     });
-Route::middleware(['auth'])->group(function () {
-    Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('book.my');
+Route::middleware(['auth', 'role:customer'])->prefix('customer')->name('customer.')->group(function () {
+    Route::get('/services', [BookingController::class, 'index'])->name('services');
+    Route::get('/my-bookings', [BookingController::class, 'myBookings'])->name('my-bookings');
+    // You can add a dashboard or services page here as well
 });
+
+// Publicly viewable services and booking form (but booking POST should be protected)
+Route::get('/services', [BookingController::class, 'index'])->name('services.index');
+Route::get('/services/{service}', [BookingController::class, 'show'])->name('services.show');
+Route::post('/services/{service}', [BookingController::class, 'store'])
+    ->middleware(['auth', 'role:customer'])
+    ->name('services.book');
 
 require __DIR__.'/auth.php';

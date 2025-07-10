@@ -44,4 +44,18 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
+    /**
+     * Get the redirect path after authentication.
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'provider') {
+            return redirect()->route('dashboard');
+        }
+        // Default for customer
+        return redirect()->route('customer.dashboard');
+    }
 }

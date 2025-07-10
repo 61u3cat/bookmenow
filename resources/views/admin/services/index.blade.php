@@ -1,9 +1,8 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Manage Services</h2>
-    </x-slot>
+@extends('layouts.app')
 
+@section('content')
     <div class="py-6 px-4">
+        <h2 class="text-xl font-semibold mb-6">Manage Services</h2>
         @if ($services->count())
             <table class="w-full border border-gray-300">
                 <thead>
@@ -26,17 +25,16 @@
                                 <form method="POST" action="{{ route('admin.services.destroy', $service) }}">
                                     @csrf
                                     @method('DELETE')
-                                    <button onclick="return confirm('Delete this service?')" class="text-red-500">Delete</button>
+                                    <button onclick="return confirm('Delete this service?')" class="text-red-500 hover:text-[#F53003]">Delete</button>
                                 </form>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-
             <div class="mt-4">{{ $services->links() }}</div>
         @else
             <p>No services found.</p>
         @endif
     </div>
-</x-app-layout>
+@endsection

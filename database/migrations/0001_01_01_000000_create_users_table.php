@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\User;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -17,9 +18,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('provider'); // admin or provider
+            $table->enum('role', ['admin', 'provider', 'customer']); // admin, provider, or customer
             $table->rememberToken();
             $table->timestamps();
+            $table->string('business_name')->nullable();
+            $table->text('business_details')->nullable();
+            $table->string('address')->nullable();
+            $table->string('govt_no')->nullable();
+            $table->string('contact')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -36,6 +42,18 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+User:: create([
+    'name' => 'admin',
+    'email'=> 'admin@mail.com','password' => bcrypt('12345678'),
+    'role' => 'admin',
+    'business_name' => null,
+    'business_details' => null,
+    'address' => null,
+    'govt_no' => null,
+    'contact' => null,
+]);
+        
     }
 
     /**

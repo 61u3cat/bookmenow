@@ -1,8 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold text-[#1b1b18]">My Service Bookings</h2>
-    </x-slot>
+@extends('layouts.app')
 
+@section('content')
     <div class="py-12 hero-bg min-h-[60vh]">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-sm rounded-lg p-6">
@@ -43,4 +41,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

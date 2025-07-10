@@ -46,7 +46,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $roles = ['admin', 'provider', 'customer'];
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -54,7 +56,16 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'role' => 'required|in:admin,provider,customer',
+        ]);
+
+        $user->role = $request->role;
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User role updated successfully.');
     }
 
     /**

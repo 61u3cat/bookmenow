@@ -20,20 +20,11 @@
     <body class="bg-[#FDFDFC] text-[#1b1b18] min-h-screen flex flex-col font-sans antialiased">
         <!-- Header -->
         <header class="w-full px-6 py-4 flex justify-between items-center bg-white shadow">
-            <div class="flex items-center gap-2">
+            <a href="{{ url('/') }}" class="flex items-center gap-2">
                 <svg width="40" height="40" fill="none" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#F53003"/><text x="50%" y="55%" text-anchor="middle" fill="#fff" font-size="18" font-family="sans-serif" dy=".3em">BMN</text></svg>
                 <span class="font-bold text-lg">BookMeNow</span>
-            </div>
-            <nav class="flex gap-4">
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="text-[#F53003] font-medium hover:underline">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="text-[#F53003] font-medium hover:underline">Login</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="text-[#F53003] font-medium hover:underline">Register</a>
-                    @endif
-                @endauth
-            </nav>
+            </a>
+            @include('layouts.navigation')
         </header>
 
         <!-- Page Heading -->
@@ -50,14 +41,6 @@
             @yield('content')
         </main>
 
-        <!-- Footer -->
-        <footer class="mt-auto bg-[#1b1b18] text-white py-8 px-6 text-center">
-            <div class="mb-2 font-semibold">BookMeNow &copy; {{ date('Y') }}</div>
-            <div class="text-sm">
-                <a href="mailto:support@bookmenow.com" class="underline hover:text-[#F53003]">Contact Support</a>
-                <span class="mx-2">|</span>
-                <a href="#" class="underline hover:text-[#F53003]">Privacy Policy</a>
-            </div>
-        </footer>
+        @include('layouts.footer')
     </body>
 </html>

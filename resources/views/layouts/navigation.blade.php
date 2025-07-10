@@ -1,112 +1,88 @@
 <!-- Navigation Bar Component -->
-<nav x-data="{ open: false }" class="bg-gray-100 dark:bg-gray-100 border-b border-gray-200 dark:border-gray-200">
-    <!-- Primary Navigation Menu Container -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo Section -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <!-- Application Logo Component -->
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-900" />
-                    </a>
-                </div>
-
-                <!-- Desktop Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <!-- Dashboard Link -->
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-900">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    @auth
-                        <x-nav-link :href="route('book.my')" :active="request()->routeIs('book.my')" class="text-gray-900">
-                            {{ __('My Bookings') }}
-                        </x-nav-link>
-                    @endauth
-                </div>
-            </div>
-
-            <!-- User Settings Dropdown (Desktop) -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                @auth
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-900 bg-gray-100 hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ Auth::user()->name }}</div>
-                                <div class="ms-1">
-                                    <svg class="fill-current h-4 w-4 text-gray-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </button>
-                        </x-slot>
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')" class="text-gray-900">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();" class="text-gray-900">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
-                @else
-                    <a href="{{ route('login') }}" class="text-gray-900 px-3 py-2 rounded">Login</a>
-                    <a href="{{ route('register') }}" class="text-gray-900 px-3 py-2 rounded">Register</a>
-                @endauth
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-900 hover:text-gray-700 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 focus:text-gray-700 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-gray-100">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-gray-900">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+<nav class="bg-gray-100 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+            {{-- <a href="{{ route('dashboard') }}">
+                <svg width="40" height="40" fill="none" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#F53003"/><text x="50%" y="55%" text-anchor="middle" fill="#fff" font-size="18" font-family="sans-serif" dy=".3em">BMN</text></svg>
+            </a> --}}
+            {{-- <span class="font-bold text-lg text-[#1b1b18]">BookMeNow</span> --}}
         </div>
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                @auth
-                    <div class="font-medium text-base text-gray-900">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-700">{{ Auth::user()->email }}</div>
-                @else
-                    <a href="{{ route('login') }}" class="block text-gray-900 py-1">Login</a>
-                    <a href="{{ route('register') }}" class="block text-gray-900 py-1">Register</a>
-                @endauth
-            </div>
-
+        <!-- Desktop Navigation -->
+        <div class="hidden sm:flex gap-4 items-center">
             @auth
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')" class="text-gray-900">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-                <form method="POST" action="{{ route('logout') }}">
+                @php $role = Auth::user()->role ?? null; @endphp
+                @if($role === 'admin')
+                    <a href="{{ route('admin.users.index') }}" class="text-[#F53003] font-medium hover:underline">Users</a>
+                    <a href="{{ route('admin.services.index') }}" class="text-[#F53003] font-medium hover:underline">Services</a>
+                    <a href="{{ route('admin.bookings.index') }}" class="text-[#F53003] font-medium hover:underline">Bookings</a>
+                @elseif($role === 'provider')
+                    <a href="{{ route('provider.services.index') }}" class="text-[#F53003] font-medium hover:underline">My Services</a>
+                    <a href="{{ route('provider.bookings.index') }}" class="text-[#F53003] font-medium hover:underline">Booked Services</a>
+                @elseif($role === 'customer')
+                    <a href="{{ route('customer.my-bookings') }}" class="text-[#F53003] font-medium hover:underline">My Bookings</a>
+                    <a href="{{ route('book.index') }}" class="text-[#F53003] font-medium hover:underline">Book Service</a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();" class="text-gray-900">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    <button type="submit" class="ml-4 text-[#1b1b18] font-medium hover:underline bg-gray-100 px-3 py-1 rounded">Logout</button>
                 </form>
-            </div>
+            @else
+                <a href="{{ route('login') }}" class="text-[#F53003] font-medium hover:underline">Login</a>
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="text-[#F53003] font-medium hover:underline">Register</a>
+                @endif
             @endauth
         </div>
+
+        <!-- Mobile Hamburger -->
+        <div class="sm:hidden flex items-center">
+            <button id="mobile-nav-toggle" class="p-2 rounded text-[#1b1b18] hover:bg-gray-200 focus:outline-none">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
     </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-nav-menu" class="hidden sm:hidden bg-gray-100 px-4 pb-4">
+        @auth
+            @php $role = Auth::user()->role ?? null; @endphp
+            @if($role === 'admin')
+                <a href="{{ route('admin.users.index') }}" class="block py-2 text-[#F53003] font-medium hover:underline">Users</a>
+                <a href="{{ route('admin.services.index') }}" class="block py-2 text-[#F53003] font-medium hover:underline">Services</a>
+                <a href="{{ route('admin.bookings.index') }}" class="block py-2 text-[#F53003] font-medium hover:underline">Bookings</a>
+            @elseif($role === 'provider')
+                <a href="{{ route('provider.services.index') }}" class="block py-2 text-[#F53003] font-medium hover:underline">My Services</a>
+                <a href="{{ route('provider.bookings.index') }}" class="block py-2 text-[#F53003] font-medium hover:underline">My Bookings</a>
+            @else
+                <a href="{{ route('profile.edit') }}" class="block py-2 text-[#F53003] font-medium hover:underline">Profile</a>
+                <a href="{{ route('book.index') }}" class="block py-2 text-[#F53003] font-medium hover:underline">Book Service</a>
+            @endif
+            <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                @csrf
+                <button type="submit" class="w-full text-left py-2 text-[#1b1b18] font-medium hover:underline bg-gray-100 px-3 rounded">Logout</button>
+            </form>
+        @else
+            <a href="{{ route('login') }}" class="block py-2 text-[#F53003] font-medium hover:underline">Login</a>
+            @if (Route::has('register'))
+                <a href="{{ route('register') }}" class="block py-2 text-[#F53003] font-medium hover:underline">Register</a>
+            @endif
+        @endauth
+    </div>
+
+    <script>
+        // Simple JS for toggling mobile nav
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggle = document.getElementById('mobile-nav-toggle');
+            const menu = document.getElementById('mobile-nav-menu');
+            if(toggle && menu) {
+                toggle.addEventListener('click', function () {
+                    menu.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
 </nav>
