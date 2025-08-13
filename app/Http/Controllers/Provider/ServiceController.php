@@ -25,20 +25,17 @@ class ServiceController extends Controller
     // Save the new service
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'title' => 'required',
             'description' => 'nullable',
             'price' => 'required|numeric',
             'duration_minutes' => 'required|integer|min:1',
         ]);
 
-        Service::create([
-            'user_id' => Auth::id(),
-            'title' => $request->title,
-            'description' => $request->description,
-            'price' => $request->price,
-            'duration_minutes' => $request->duration_minutes,
-        ]);
+        $validatedData['user_id'] = Auth::id();
+        $validatedData['tenant_id'] = Auth::user()->tenant_id;
+
+        Service::create($validatedData);
 
         return redirect()->route('provider.services.index')->with('success', 'Service created successfully.');
     }

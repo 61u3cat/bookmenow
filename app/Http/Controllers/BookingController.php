@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
@@ -31,6 +32,14 @@ class BookingController extends Controller
     // Store a new booking (POST)
     public function store(Request $request, Service $service)
     {
+        // Ensure the service is properly loaded with tenant_id
+        $service = Service::findOrFail($service->id);
+        
+        if (!$service->tenant_id) {
+            Log::error('Service missing tenant_id', ['service' => $service->toArray()]);
+            return redirect()->back()->with('error', 'Unable to process booking. Service configuration issue.');
+        }
+
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -39,6 +48,8 @@ class BookingController extends Controller
         ]);
 
         $validated['user_id'] = Auth::id();
+        $validated['tenant_id'] = $service->tenant_id;
+        Log::info('Booking validated data:', $validated);
 
         // Prevent duplicate booking for the same service by the same user
         $alreadyBooked = $service->bookings()
@@ -50,9 +61,10 @@ class BookingController extends Controller
                 ->with('error', 'You have already booked this service.');
         }
 
-        $service->bookings()->create($validated);
+        $booking = $service->bookings()->create($validated);
 
-        return redirect()->route('customer.my-bookings')->with('success', 'Booking placed successfully!');
+        // Redirect to payment checkout
+        return redirect()->route('payment.checkout', $booking);
     }
 
     // Show bookings for the logged-in customer

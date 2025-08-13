@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
+use App\Models\Tenant;
+use Illuminate\Support\Facades\DB;
 
 class RegisteredUserController extends Controller
 {
@@ -51,24 +53,31 @@ class RegisteredUserController extends Controller
 
         $validated = $request->validate($rules);
 
-        // Prepare user data
-        $userData = [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => $validated['role'],
-        ];
-
-        // Add provider fields if role is provider
-        if ($validated['role'] === 'provider') {
-            $userData['business_name'] = $validated['business_name'];
-            $userData['business_details'] = $validated['business_details'];
-            $userData['address'] = $validated['address'];
-            $userData['govt_no'] = $validated['govt_no'] ?? null;
-            $userData['contact'] = $validated['contact'];
-        }
-
-        $user = User::create($userData);
+        $user = DB::transaction(function () use ($validated) {
+            $user = null;
+            if ($validated['role'] === 'provider') {
+                $tenant = Tenant::create(['name' => $validated['business_name']]);
+                $user = $tenant->users()->create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'password' => Hash::make($validated['password']),
+                    'role' => $validated['role'],
+                    'business_name' => $validated['business_name'],
+                    'business_details' => $validated['business_details'],
+                    'address' => $validated['address'],
+                    'govt_no' => $validated['govt_no'] ?? null,
+                    'contact' => $validated['contact'],
+                ]);
+            } else {
+                $user = User::create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'password' => Hash::make($validated['password']),
+                    'role' => $validated['role'],
+                ]);
+            }
+            return $user;
+        });
 
         event(new Registered($user));
         Auth::login($user);

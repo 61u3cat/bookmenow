@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Tenant;
+use App\Traits\BelongsToTenant;
 
 class Service extends Model
 {
+    use BelongsToTenant;
     protected $fillable =
     [
         'user_id',
@@ -28,4 +31,6 @@ class Service extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    
 }

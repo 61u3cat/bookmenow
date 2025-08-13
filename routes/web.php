@@ -28,6 +28,15 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:provider'])->prefix('provider')->name('provider.')->group(function () {
     Route::resource('services', App\Http\Controllers\Provider\ServiceController::class);
 });
+
+// Payment routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/payment/checkout/{booking}', [App\Http\Controllers\PaymentController::class, 'checkout'])->name('payment.checkout');
+    Route::get('/payment/success', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+});
+
+// Stripe webhook
+Route::post('/stripe/webhook', [App\Http\Controllers\PaymentController::class, 'handleWebhook'])->name('stripe.webhook');
 // Route::middleware(['auth', 'role:provider'])->group(function () {
 // Route::middleware(['auth'])->group(function () {
 //     Route::get('/provider/test', fn() => 'Testing Route');
@@ -38,14 +47,14 @@ Route::middleware('auth')->prefix('book')->name('book.')->group(function () {
     Route::get('/{service}', [BookingController::class, 'show'])->name('show'); // service detail
     Route::post('/{service}', [BookingController::class, 'store'])->name('store'); // submit booking
 });
-Route::middleware(['auth','role:provider'])->prefix('provider')->name('provider.')->group(function(){
-    Route::get('/bookings',[App\Http\Controllers\Provider\BookingController::class,'index'])->name('bookings.index');
+Route::middleware(['auth', 'role:provider'])->prefix('provider')->name('provider.')->group(function () {
+    Route::get('/bookings', [App\Http\Controllers\Provider\BookingController::class, 'index'])->name('bookings.index');
 });
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+        Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
 
         // Admin managing providers, services, and bookings
         Route::resource('users', App\Http\Controllers\Admin\UserController::class);
@@ -65,4 +74,9 @@ Route::post('/services/{service}', [BookingController::class, 'store'])
     ->middleware(['auth', 'role:customer'])
     ->name('services.book');
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'role:provider'])->group(function () {
+    Route::get('/subscribe', [App\Http\Controllers\SubscriptionController::class, 'create'])->name('subscription.create');
+    Route::post('/subscribe', [App\Http\Controllers\SubscriptionController::class, 'store'])->name('subscription.store');
+});
+
+require __DIR__ . '/auth.php';

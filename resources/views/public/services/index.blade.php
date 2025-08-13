@@ -14,7 +14,7 @@
                                 <p class="mb-3 text-[#706f6c]">{{ Str::limit($service->description, 100) }}</p>
                                 <p class="font-bold text-[#F53003] text-lg mb-4">৳ {{ $service->price }}</p>
                             </div>
-                            @if (in_array($service->role, $bookedServiceIds))
+                            @if (in_array($service->id, $bookedServiceIds))
                                 <div class="mt-auto px-6 py-2 bg-gray-300 text-gray-700 rounded shadow text-center">
                                     Already Booked
                                 </div>

@@ -56,7 +56,7 @@
                     @elseif(Auth::user()->role === 'customer')
                         <div class="mt-4 flex flex-wrap gap-4">
                             <a href="{{ route('profile.edit') }}" class="px-5 py-2 bg-[#F53003] text-black rounded shadow font-medium hover:bg-[#b91c1c] transition">Edit Profile</a>
-                            <a href="{{ route('book.index') }}" class="px-5 py-2 bg-[#F53003] text-black rounded shadow font-medium hover:bg-[#b91c1c] transition">Book a Service</a>
+                            <a href="{{ route('services.index') }}" class="px-5 py-2 bg-[#F53003] text-black rounded shadow font-medium hover:bg-[#b91c1c] transition">Book a Service</a>
                         </div>
                         <div class="mt-8">
                             <h4 class="font-semibold mb-2">Booking Tips</h4>
